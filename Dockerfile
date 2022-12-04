@@ -24,7 +24,5 @@ RUN chmod +x /scripts/*
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 
-EXPOSE 8000
-
 CMD python manage.py makemigrations; python manage.py migrate;
 ENTRYPOINT ["/scripts/entrypoint.sh"]
