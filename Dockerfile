@@ -24,15 +24,7 @@ RUN chmod +x /scripts/*
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 
-#RUN adduser -S user
-
-#RUN chown -R user /vol
-
-RUN chmod -R 755 /vol/web
-#RUN chown -R user /app
-#RUN chmod -R 755 /app
-
-#USER user
+EXPOSE 8000
 
 CMD python manage.py makemigrations; python manage.py migrate;
 ENTRYPOINT ["/scripts/entrypoint.sh"]
