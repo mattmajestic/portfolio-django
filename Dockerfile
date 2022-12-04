@@ -1,53 +1,38 @@
-# Use an official Python runtime based on Debian 10 "buster" as a parent image.
-FROM python:3.9-slim-buster
+FROM python:3.8.9-alpine
 
-# Add user that will be used in the container.
-RUN useradd wagtail
 
-# Install system packages required by Wagtail and Django.
-RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    libmariadbclient-dev \
-    libjpeg62-turbo-dev \
-    zlib1g-dev \
-    libwebp-dev \
- && rm -rf /var/lib/apt/lists/*
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONNUNBUFFERED 1
 
-# Install the application server.
-RUN pip install "gunicorn==20.0.4"
+RUN apk update
+RUN apk add postgresql-dev gcc python3-dev musl-dev libc-dev linux-headers
 
-# Use /app folder as a directory where the source code is stored.
-WORKDIR /app
+RUN apk add jpeg-dev zlib-dev libjpeg
 
-# Install the project requirements.
-COPY ./portfolio/requirements.txt /app
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+
 RUN pip install -r requirements.txt
 
+RUN mkdir /app
+COPY . /app
+WORKDIR /app
+COPY ./scripts /scripts
 
-# Set this directory to be owned by the "wagtail" user. This Wagtail project
-# uses SQLite, the folder needs to be owned by the user that
-# will be writing to the database file.
-RUN chown wagtail:wagtail /app
+RUN chmod +x /scripts/*
 
-# Copy the source code of the project into the container.
-COPY --chown=wagtail:wagtail ./portfolio /app
+RUN mkdir -p /vol/web/media
+RUN mkdir -p /vol/web/static
 
-# Use user "wagtail" to run the build commands below and the server itself.
-USER wagtail
+#RUN adduser -S user
 
-# Collect static files.
-RUN python manage.py collectstatic --noinput --clear
+#RUN chown -R user /vol
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE=portfolio.settings.prod
+RUN chmod -R 755 /vol/web
+#RUN chown -R user /app
+#RUN chmod -R 755 /app
 
-# Port used by this container to serve HTTP.
-ARG PORT
-ENV PORT=$PORT
-EXPOSE $PORT
+#USER user
 
-RUN ["chmod", "+x", "/app/entrypoint.sh"]
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD python manage.py makemigrations; python manage.py migrate;
+ENTRYPOINT ["/scripts/entrypoint.sh"]
