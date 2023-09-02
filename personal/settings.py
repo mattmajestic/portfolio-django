@@ -57,17 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'portfolio',
-    'psycopg2',
-    'blogs',
-    'works',
-    'experiences',
-    'django_summernote',
-    'cloudinary',
-    'cloudinary_storage',
-    'taggit',
-    'django.contrib.sitemaps',
-    'mdeditor',
-
+    'psycopg2'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -126,7 +116,7 @@ DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.mysql",
         'NAME': "mattmajestic$mysql",
-        'USER': "mattmajestic",
+        'USER': "port_test",
         'PASSWORD': "demopassword",
         'HOST': "mattmajestic.mysql.pythonanywhere-services.com",
         'PORT': 3306,

@@ -1,17 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from experiences.models import Employment
 from portfolio.forms import ContactForm
-from blogs.models import Post
-from works.models import Work
 from portfolio.models import Contact
 from django.urls import reverse
 
 
 def home(request):
-    posts = Post.objects.filter(status=1).order_by('-created_on')[:3]
-    works = Work.objects.filter(status=1).order_by('-created_on')[:3]
-    experiences = Employment.objects.all().order_by('-current_status', '-start_year', '-end_year')
     
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -27,9 +21,4 @@ def home(request):
     else:
         form = ContactForm()
 
-    return render(request, 'index.html', {'form': form, 'posts': posts, 'works': works, 'experiences': experiences})
-
-def thanks(request):
-    contacts = Contact.objects.all().order_by('-created')[:1]
-    
-    return render(request, 'thanks.html', {'contacts': contacts,})
+    return render(request, 'index.html', {'form': form})

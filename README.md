@@ -1,4 +1,4 @@
-# My personal portfolio With blogging features
+# Django Portfolio on Python Anywhere by Anaconda
 ## Technology Stacks Usend in this:
 - [x] Django
 - [x] Docker, docker-compose

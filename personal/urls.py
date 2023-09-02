@@ -26,27 +26,10 @@ from django.views.generic.base import RedirectView
 
 from django.contrib.staticfiles.storage import staticfiles_storage
 
-from django.contrib.sitemaps.views import sitemap
-from blogs.models import Post
-from blogs.sitemaps import PostSitemap
-
-
-sitemaps = {
-    'posts': PostSitemap,
-}
-
 
 urlpatterns = [
         path('admin/', admin.site.urls),
-        path('', include('portfolio.urls')),
-        path('blogs/', include('blogs.urls')),
-        path('works/', include('works.urls')),
-        path('summernote/', include('django_summernote.urls')),
-        path("ads.txt", RedirectView.as_view(url=staticfiles_storage.url("ads.txt")),),
-
-        path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, 
-             name='django.contrib.sitemaps.views.sitemap'),
-        path('mdeditor/', include('mdeditor.urls')),
+        path('', include('portfolio.urls'))
 ]
 
 urlpatterns.append(url(f'^{settings.MEDIA_URL.lstrip("/")}(?P<path>.*)$',
